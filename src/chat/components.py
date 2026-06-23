@@ -60,17 +60,21 @@ def _button(label: str, custom_id: str,
     return _RoutedButton(label=label, custom_id=custom_id, style=style, row=row)
 
 
-def _rows_for(n: int, per_row: int = 2) -> list[int]:
-    return [i // max(per_row, 1) for i in range(n)]
-
-
 # ─── Onboarding ──────────────────────────────────────────────────────────────
+#
+# Row layout: discord.py auto-assigns buttons to rows when ``row=None``, packing
+# 5 per row and staying within Discord's hard 5-row (0..4) / 20-button limit
+# automatically. We deliberately DON'T compute rows ourselves — earlier code did
+# ``row = i // 2`` which pushed the "Done" button to row 5 on an 8-option
+# multichoice (e.g. cuisines, equipment), raising
+# "row cannot be negative or greater than or equal to 5". Letting discord.py pack
+# them is the safe, future-proof choice.
 
 
 def onboarding_choice(key: str, options: list[str], per_row: int = 2) -> discord.ui.View:
     v = _new_view()
     for i, o in enumerate(options):
-        v.add_item(_button(o, f"ob:{key}:{i}", row=i // max(per_row, 1)))
+        v.add_item(_button(o, f"ob:{key}:{i}"))
     return v
 
 
@@ -80,12 +84,9 @@ def onboarding_multichoice(key: str, options: list[str], selected: set[int],
     for i, o in enumerate(options):
         mark = "✅ " if i in selected else "○ "
         v.add_item(_button(mark + o, f"obm:{key}:{i}",
-                           row=i // max(per_row, 1),
                            style=discord.ButtonStyle.secondary))
-    # Done button on its own row
-    n = len(options)
+    # Done button — auto-packed onto the next free slot (no manual row math)
     v.add_item(_button("Done ✅", f"obm:{key}:done",
-                       row=(n // max(per_row, 1)) + 1,
                        style=discord.ButtonStyle.success))
     return v
 

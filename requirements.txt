@@ -14,3 +14,9 @@ pydantic>=2.7.0
 
 # .env loading
 python-dotenv>=1.0.1
+
+# Timezone database — Android/Termux ships Python WITHOUT the IANA tz database,
+# so ZoneInfo("Asia/Kolkata") raises ZoneInfoNotFoundError. tzdata bundles it.
+# On desktop Linux/macOS/Windows this package is unused (harmless) — they already
+# have the db. Bumping it onto requirements.txt means Termux "just works".
+tzdata>=2024.1
