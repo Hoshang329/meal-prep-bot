@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtualenvs
+venv/
+.venv/
+env/
+
+# ─── Secrets & Telethon sessions — NEVER commit these ──────────────────────
+.env
+*.session
+*.session-journal
+config/.env
+
+# Logs
+*.log

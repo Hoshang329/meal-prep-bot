@@ -1,0 +1,16 @@
+# Discord (the bot client — provides both the chat UX and reads/writes the
+# memory channel, since a Discord bot CAN read channel message history, unlike
+# the Telegram Bot API)
+discord.py>=2.3.0
+
+# Scheduling (weekly / prep-day / daily / evening-confirm / periodic-learn cron jobs)
+APScheduler>=3.10.4
+
+# LLM calls (OpenAI-compatible — OpenCode / Claude / OpenAI / local Ollama all speak this)
+httpx>=0.27.0
+
+# Memory doc schemas + validation
+pydantic>=2.7.0
+
+# .env loading
+python-dotenv>=1.0.1

@@ -1,0 +1,40 @@
+# Ruff configuration — intentionally LENIENT.
+#
+# Goal: catch real bugs at the token/syntax level, not enforce style opinions.
+# That keeps the lint pass useful during edits without forcing a big cleanup.
+#
+# What this config enables:
+#   F   Pyflakes — real bugs (unused imports, undefined names, redefined names,
+#                  `== None` / `is` misuse, f-string without placeholders,
+#                  `print` left in library code).
+#   E4  Pycodestyle errors that actually break things (real syntax issues,
+#                  invalid escape sequences, tabs/spaces mix).
+#   W   Pycodestyle warnings — only truly problematic cases.
+#
+# What this config does NOT enforce:
+#   Line length, blank-line rules, import-sorting, docstring presence, magic
+#   numbers, etc. — those are style choices and would require a multi-file
+#   cleanup to introduce cleanly. Bump up later if you want them.
+
+target-version = "py310"
+
+[lint]
+# Enable bug-catching rule groups only.
+select = ["F", "E4", "W"]
+# A few Pyflakes/pep8 findings are noise in this codebase; ignore them.
+ignore = [
+    "E402",  # module-level import not at top of file — onboarding/flow.py etc.
+             # import inside functions on purpose to break cycles; fine to keep.
+    "E741",  # ambiguous one-letter variable name (e.g. `l`, `I`) — rare and harmless here.
+]
+
+[lint.per-file-ignores]
+# Tests are allowed unused-import-style helpers and longer expressions.
+"tests/*.py" = ["F401", "F811"]
+# The main entrypoint legitimately has top-level `import` interleaved with setup.
+"src/main.py" = ["E402"]
+
+[lint.pyflakes]
+# Allow `from __future__ import annotations`-style forward references without
+# treating every TYPE_CHECKING block import as "unused".
+allowed-unused-imports = []
